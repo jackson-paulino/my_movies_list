@@ -5,7 +5,7 @@ class UserModel {
 
   UserModel({required this.id, required this.name, required this.email});
 
-  factory UserModel.frojson(Map<String, dynamic> json) {
+  factory UserModel.fromjson(Map<String, dynamic> json) {
     return UserModel(id: json['id'], name: json['name'], email: json['email']);
   }
 }

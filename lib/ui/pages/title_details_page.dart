@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_movies_list/blocs/title_details_bloc.dart';
 import 'package:my_movies_list/data/models/title_delais_model.dart';
 import 'package:my_movies_list/data/models/title_model.dart';
 import 'package:my_movies_list/data/repositories/title_repository_interface.dart';
@@ -9,31 +11,58 @@ import 'package:my_movies_list/ui/widgets/custom_rate_button.dart';
 import 'package:my_movies_list/ui/widgets/loading_circular_progress.dart';
 
 class TitleDetailsPage extends StatelessWidget {
-  final _repository = getIt.get<TitleRepositoryInterface>();
-  TitleDetailsPage({Key? key}) : super(key: key);
+  const TitleDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final title = ModalRoute.of(context)!.settings.arguments as TitleModel;
+    return BlocProvider<TitleDetailsCubit>(
+      create: (_) =>
+          TitleDetailsCubit(getIt.get<TitleRepositoryInterface>(), title.id),
+      child: BlocBuilder<TitleDetailsCubit, TitleDetailsState>(
+        builder: (context, state) {
+          return TitleDetailsView(
+              titleDetailsCubit: context.read<TitleDetailsCubit>(),
+              titleDetailsState: state);
+        },
+      ),
+    );
+  }
+}
 
+class TitleDetailsView extends StatelessWidget {
+  final TitleDetailsCubit titleDetailsCubit;
+  final TitleDetailsState titleDetailsState;
+  const TitleDetailsView(
+      {Key? key,
+      required this.titleDetailsCubit,
+      required this.titleDetailsState})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: ListView(
         children: [
-          FutureBuilder<TitleDetailModel?>(
-            future: _repository.getTitleDetalis(title.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const LoadingCircularProgress(text: 'Conectando');
-              }
-              if (snapshot.hasData) {
-                final movies = snapshot.data;
-                return CustomCarrousel(
-                    scrollDirection: Axis.vertical,
-                    children: [_buildDetalisMovies(movies!)]);
-              } else {
-                return const LoadingCircularProgress(text: 'Nenhum Dados');
-              }
+          BlocBuilder<TitleDetailsCubit, TitleDetailsState>(
+            builder: (context, state) {
+              return StreamBuilder<TitleDetailModel?>(
+                stream: titleDetailsCubit.getTitleDetails().asStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const LoadingCircularProgress(text: 'Conectando');
+                  }
+                  if (snapshot.hasData) {
+                    final movies = snapshot.data;
+                    return CustomCarrousel(
+                        scrollDirection: Axis.vertical,
+                        children: [_buildDetalisMovies(movies!)]);
+                  } else {
+                    return const LoadingCircularProgress(text: 'Nenhum Dados');
+                  }
+                },
+              );
             },
           ),
         ],

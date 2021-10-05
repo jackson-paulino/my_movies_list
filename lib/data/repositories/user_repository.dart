@@ -20,14 +20,15 @@ class UserRepository implements UserRepositoryInferface {
   }
 
   @override
-  Future<UserModel?> getUser() async {
+  Future<UserModel?> getUser({bool cadastro = false}) async {
     if (user == null) {
       final token = await getToken();
       final uri = '$_baseUrl/auth/me';
       final headers = {'Authorization': 'Bearer $token'};
       final response = await _http.getRequest(uri, headers: headers);
-      user = UserModel.frojson(response.content!);
+      user = UserModel.fromjson(response.content!);
     }
+    return user;
   }
 
   @override
@@ -40,7 +41,8 @@ class UserRepository implements UserRepositoryInferface {
       var token = response.content!['token'];
 
       await saveToken(token);
-      await getUser();
+
+      return getUser();
     }
 
     if (response.statusCode == 400) {
@@ -48,29 +50,6 @@ class UserRepository implements UserRepositoryInferface {
     }
 
     throw Exception('Falha ao realizar login');
-  }
-
-  @override
-  Future<UserModel?> register(
-      String email, String password, String name) async {
-    final url = '$_baseUrl/auth/regsiter';
-    final body = {'email': email, 'password': password, 'name': name};
-
-    var response = await _http.postRequest(url, body);
-
-    if (response.success) {
-      var token = response.content!['token'];
-
-      await saveToken(token);
-
-      return getUser();
-    }
-
-    if (response.statusCode == 400) {
-      throw UserAlreadyExistsException();
-    }
-
-    throw Exception('Falha cadastrar usuário');
   }
 
   @override
@@ -87,5 +66,28 @@ class UserRepository implements UserRepositoryInferface {
   @override
   Future<void> clearSession() async {
     await _secureStorage.delete(key: 'AUTH_TOKEN');
+  }
+
+  @override
+  Future<UserModel?> register(
+      String name, String email, String password) async {
+    final url = '$_baseUrl/auth/register';
+    final body = {'email': email, 'password': password, 'name': name};
+
+    var response = await _http.postRequest(url, body);
+
+    if (response.success) {
+      var token = response.content!['token'];
+
+      await saveToken(token);
+
+      return getUser(cadastro: true);
+    }
+
+    if (response.statusCode == 400) {
+      throw UserAlreadyExistsException();
+    }
+
+    throw Exception('Falha cadastrar usuário');
   }
 }

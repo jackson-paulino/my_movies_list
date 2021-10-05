@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:my_movies_list/data/repositories/user_repository_interface.dart';
+import 'package:my_movies_list/ui/shared/app_locator.dart';
 import 'package:my_movies_list/ui/shared/app_routes.dart';
 
 import 'widgets/main_tab_page.dart';
@@ -35,6 +37,13 @@ class HomePage extends StatelessWidget {
                   onPressed: () =>
                       Navigator.pushNamed(context, AppRoutes.searchPage),
                   icon: const Icon(Icons.search)),
+              IconButton(
+                  onPressed: () async {
+                    await getIt.get<UserRepositoryInferface>().clearSession();
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, AppRoutes.loginPage, (route) => false);
+                  },
+                  icon: const Icon(Icons.exit_to_app))
             ],
           ),
           body: TabBarView(

@@ -29,7 +29,7 @@ class HttpService {
     if (headers != null) {
       headers['Content-Type'] = 'application/json';
     } else {
-      headers = {'Content-Type': 'applucation/json'};
+      headers = {'Content-Type': 'application/json'};
     }
     var httpResponse = await _cliente.post(Uri.parse(uri),
         body: jsonEncode(body), headers: headers);
