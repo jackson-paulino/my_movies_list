@@ -16,17 +16,15 @@ class TitleThumbmail extends StatelessWidget {
           child: CustomNetworkImage(url: title.posterUrl),
         ),
         Container(
-          padding: const EdgeInsets.only(bottom: 4),
-          child: const Text(
-            '(2020)',
+          padding: const EdgeInsets.all(2),
+          child: Text(
+            title.name,
+            maxLines: 2,
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(fontSize: 12, color: Colors.white),
           ),
         )
       ],
     );
   }
 }
-
-
-

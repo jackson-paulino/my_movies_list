@@ -7,12 +7,12 @@ import 'package:my_movies_list/data/services/http_service.dart';
 import 'package:my_movies_list/ui/shared/app_string.dart';
 
 class UserRepository implements UserRepositoryInferface {
-  final HttpService _http;
+  final HttpService _httpService;
   final _secureStorage = const FlutterSecureStorage();
   final _baseUrl = Strings.movieApiUrl;
   UserModel? user;
 
-  UserRepository(this._http);
+  UserRepository(this._httpService);
 
   @override
   Future<String?> getToken() {
@@ -25,8 +25,8 @@ class UserRepository implements UserRepositoryInferface {
       final token = await getToken();
       final uri = '$_baseUrl/auth/me';
       final headers = {'Authorization': 'Bearer $token'};
-      final response = await _http.getRequest(uri, headers: headers);
-      user = UserModel.fromjson(response.content!);
+      final response = await _httpService.getRequest(uri, headers: headers);
+      user = UserModel.fromJson(response.content!);
     }
     return user;
   }
@@ -35,7 +35,7 @@ class UserRepository implements UserRepositoryInferface {
   Future<UserModel?> login(String email, String password) async {
     final url = '$_baseUrl/auth/login';
     final body = {'email': email, 'password': password};
-    final response = await _http.postRequest(url, body);
+    final response = await _httpService.postRequest(url, body);
 
     if (response.success) {
       var token = response.content!['token'];
@@ -74,7 +74,7 @@ class UserRepository implements UserRepositoryInferface {
     final url = '$_baseUrl/auth/register';
     final body = {'email': email, 'password': password, 'name': name};
 
-    var response = await _http.postRequest(url, body);
+    var response = await _httpService.postRequest(url, body);
 
     if (response.success) {
       var token = response.content!['token'];
@@ -89,5 +89,20 @@ class UserRepository implements UserRepositoryInferface {
     }
 
     throw Exception('Falha cadastrar usuário');
+  }
+
+  @override
+  Future<List<UserModel>> getlistUsers() async {
+    final uri = '$_baseUrl/users';
+    final token = await getToken();
+    final headers = {'Authorization': 'Bearer $token'};
+    final response = await _httpService.getRequest(uri, headers: headers);
+
+    if (response.success) {
+      List<dynamic> data = response.content!['data'];
+      return List<UserModel>.from(data.map((json) => UserModel.fromJson(json)));
+    }
+
+    return [];
   }
 }

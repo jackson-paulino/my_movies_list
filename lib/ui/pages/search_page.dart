@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_movies_list/data/repositories/title_repository.dart';
-import 'package:my_movies_list/ui/widgets/custom_gesture_detector.dart';
 import 'package:my_movies_list/ui/widgets/custom_text_field.dart';
 
 class SearchPage extends StatelessWidget {

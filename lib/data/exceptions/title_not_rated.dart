@@ -1,0 +1,1 @@
+class TitleNotRatedException implements Exception {}

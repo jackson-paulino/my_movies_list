@@ -14,4 +14,6 @@ abstract class UserRepositoryInferface {
   Future<bool> isLogged();
 
   Future<void> clearSession();
+
+  Future<List<UserModel>> getlistUsers();
 }

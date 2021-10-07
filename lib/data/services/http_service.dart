@@ -42,8 +42,14 @@ class HttpService {
     return _parseHttpResponse(httpResponse);
   }
 
-  Future<Response> deleteRequest(String uri) async {
-    var httpResponse = await _cliente.delete(Uri.parse(uri));
+  Future<Response> deleteRequest(String uri,
+      {Map<String, String>? headers}) async {
+    if (headers != null) {
+      headers['Content-Type'] = 'application/json';
+    } else {
+      headers = {'Content-Type': 'application/json'};
+    }
+    var httpResponse = await _cliente.delete(Uri.parse(uri), headers: headers);
     return _parseHttpResponse(httpResponse);
   }
 

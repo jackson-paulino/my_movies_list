@@ -7,15 +7,17 @@ class CustomNetworkImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      url,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return const LoadingCircularProgress();
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset('assets/images/erro.jpg');
-      },
+    return Center(
+      child: Image.network(
+        url,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return const LoadingCircularProgress();
+        },
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/images/erro.jpg');
+        },
+      ),
     );
   }
 }

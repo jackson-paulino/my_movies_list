@@ -1,0 +1,1 @@
+class CommentByOtherUserException implements Exception {}

@@ -5,7 +5,7 @@ class TitleDetailModel {
   final String name;
   final String overview;
   final DateTime? releaseDate;
-  final int voteAverage;
+  final num voteAverage;
   final String homepage;
   final String runtime;
   final List<GenresModel>? genres;
@@ -39,8 +39,10 @@ class TitleDetailModel {
       id: json['id'],
       name: json['name'],
       overview: json['overview'],
-      releaseDate: DateTime.parse(json['release_date']),
-      voteAverage: json['vote_average'],
+      releaseDate: json['release_date'] != ''
+          ? DateTime.parse(json['release_date'])
+          : null,
+      voteAverage: json['vote_average'] ?? '',
       runtime: json['runtime'],
       genres: genres,
       homepage: json['homepage'],
