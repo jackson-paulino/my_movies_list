@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Meu catalogo de filmes'),
+            title: const Text('Catálogo'),
             bottom: const TabBar(
               tabs: [
                 Tab(child: Text('Principal')),
@@ -47,8 +47,8 @@ class HomePage extends StatelessWidget {
                   icon: const Icon(Icons.exit_to_app))
             ],
           ),
-          body: TabBarView(
-              physics: const NeverScrollableScrollPhysics(),
+          body: const TabBarView(
+              physics: NeverScrollableScrollPhysics(),
               children: [MainTabPage(), MoviesTabPage(), SeriesTabPage()]),
         ));
   }

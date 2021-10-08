@@ -1,32 +1,37 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_movies_list/blocs/home_cubit.dart';
+import 'package:my_movies_list/data/models/title_type.dart';
 import 'package:my_movies_list/data/repositories/title_repository_interface.dart';
 import 'package:my_movies_list/ui/shared/app_locator.dart';
 import 'package:my_movies_list/ui/widgets/custom_list_future.dart';
 
 class MainTabPage extends StatelessWidget {
-  final _repository = getIt.get<TitleRepositoryInterface>();
-  MainTabPage({Key? key}) : super(key: key);
+  const MainTabPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-      child: ListView(
-        children: [
-          BuilderListFuture(
-            label: 'Filmes Recentes',
-            listFuture: _repository.getMovieUpcomingList(),
-          ),
-          BuilderListFuture(
-            label: 'Filmes Populares',
-            listFuture: _repository.getMovieTvPopularList(),
-          ),
-          BuilderListFuture(
-            label: 'Séries Populares',
-            listFuture: _repository.getMovieTvPopularList(isTvShow: true),
-          ),
-        ],
-      ),
-    );
+    final titleList = [
+      TitleType(
+          paramsUrl: false,
+          label: 'Filmes Recentes',
+          params: 'upcoming',
+          isTvShow: false),
+      TitleType(
+          paramsUrl: false,
+          label: 'Filmes Populares',
+          params: 'popular',
+          isTvShow: false),
+      TitleType(
+          paramsUrl: false,
+          label: 'Séries Populares',
+          params: 'popular',
+          isTvShow: true)
+    ];
+
+    return BlocProvider(
+        create: (_) => HomeCubit(getIt.get<TitleRepositoryInterface>())
+          ..getList(titleList),
+        child: BuilderListFuture(titleType: titleList));
   }
 }

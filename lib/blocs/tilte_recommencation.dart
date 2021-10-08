@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_movies_list/data/models/title_model.dart';
 import 'package:my_movies_list/data/repositories/title_repository_interface.dart';
+import 'package:my_movies_list/ui/shared/app_url.dart';
 
 abstract class TitleDetailRecommendationState {}
 
@@ -18,8 +19,9 @@ class TitleDetailSuccessRecommendationState
 
 class TitleDetailRecommendationCubit
     extends Cubit<TitleDetailRecommendationState> {
-  final TitleModel titleModel;
   final TitleRepositoryInterface _repository;
+  final TitleModel titleModel;
+  final AppUri _appUri = AppUri();
 
   TitleDetailRecommendationCubit(this._repository, {required this.titleModel})
       : super(TitleDetailProcessingRecommendationState());
@@ -27,9 +29,8 @@ class TitleDetailRecommendationCubit
   Future<void> getTitleRecommendation() async {
     emit(TitleDetailProcessingRecommendationState());
 
-    var response = await _repository.getTitleRecommendation(
-        titleModel.id.toString(),
-        isTvShow: titleModel.isTvShow);
+    var response = await _repository
+        .getTitleRecommendation(_appUri.isUriRecommendation(titleModel));
     emit(TitleDetailSuccessRecommendationState(response));
   }
 }

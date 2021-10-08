@@ -136,44 +136,4 @@ class RatingTitleView extends StatelessWidget {
       ),
     );
   }
-
-  /* Widget _buildTitleCard(
-      {required TitleRatedModel title,
-      required BuildContext context,
-      bool canRate = false}) {
-    return ListTile(
-      leading: CustomNetworkImage(url: title.posterUrl),
-      title: Text(
-        title.name,
-        style: const TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      trailing: BlocBuilder<TitleRateCubit, TitleRateState>(
-        buildWhen: (previous, current) {
-          if (current is TitleRateSuccessState) {
-            return current.rate == title.id;
-          }
-
-          return true;
-        },
-        builder: (context, state) {
-          bool? _rate = title.rate != null ? (title.rate == 1) : null;
-
-          if (state is TitleRateSuccessState) {
-            _rate = state.rate as bool?;
-          }
-
-          return CustomRateButton(
-            value: _rate,
-            onPressed: canRate
-                ? (bool value) =>
-                    context.read<TitleRateCubit>().saveTitleRate(value ? 1 : -1)
-                : null,
-          );
-        },
-      ),
-    );
-  } */
 }

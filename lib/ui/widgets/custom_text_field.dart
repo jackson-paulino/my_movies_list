@@ -8,6 +8,8 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final bool comment;
   final Function? onPressed;
+  final Function(String)? onFieldSubmitted;
+  final bool colorTextEditDark;
   final TextInputType keyboardType;
   final InputBorder? border;
 
@@ -21,6 +23,8 @@ class CustomTextField extends StatefulWidget {
     this.keyboardType = TextInputType.streetAddress,
     this.onPressed,
     this.comment = false,
+    this.onFieldSubmitted,
+    this.colorTextEditDark = true,
   }) : super(key: key);
 
   @override
@@ -41,6 +45,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
           validator: widget.validator,
           keyboardType: widget.keyboardType,
           obscureText: _buildobscureTextPassword() ?? !obscureText,
+          onFieldSubmitted: widget.onFieldSubmitted,
+          style: widget.colorTextEditDark
+              ? null
+              : const TextStyle(color: Colors.white),
           decoration: InputDecoration(
               hintText: widget.hintText,
               labelText: widget.labelText,

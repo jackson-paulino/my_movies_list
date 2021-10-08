@@ -3,6 +3,7 @@ import 'package:my_movies_list/data/exceptions/comment_by_other_user_exception.d
 import 'package:my_movies_list/data/models/title_delais_model.dart';
 import 'package:my_movies_list/data/models/title_model.dart';
 import 'package:my_movies_list/data/repositories/title_repository_interface.dart';
+import 'package:my_movies_list/ui/shared/app_url.dart';
 
 abstract class TitleDetailCommentState {}
 
@@ -27,8 +28,9 @@ class TitleDetailCommentFailState extends TitleDetailCommentState {
 class TitleDetailCommentByOtherUserState extends TitleDetailCommentState {}
 
 class TitleDetailCommentCubit extends Cubit<TitleDetailCommentState> {
-  final TitleModel titleModel;
   final TitleRepositoryInterface _repository;
+  final TitleModel titleModel;
+  final AppUri _appUri = AppUri();
 
   TitleDetailCommentCubit(this._repository, {required this.titleModel})
       : super(TitleDetailCommentProcessingState());
@@ -37,12 +39,12 @@ class TitleDetailCommentCubit extends Cubit<TitleDetailCommentState> {
     emit(TitleDetailCommentProcessingState());
 
     try {
-      var response = await _repository.getTitleComments(titleModel.id,
-          isTvShow: titleModel.isTvShow);
+      var response = await _repository
+          .getTitleComments(_appUri.isUriListComments(titleModel));
       emit(TitleDetailCommentSuccessState(response));
     } catch (e) {
-      var response = await _repository.getTitleComments(titleModel.id,
-          isTvShow: titleModel.isTvShow);
+      var response = await _repository
+          .getTitleComments(_appUri.isUriListComments(titleModel));
       emit(TitleDetailCommentFailState(response));
     }
   }
@@ -51,23 +53,23 @@ class TitleDetailCommentCubit extends Cubit<TitleDetailCommentState> {
     emit(TitleDetailCommentProcessingState());
 
     try {
-      var success = await _repository.removeComment(titleModel.id, commentId,
-          isTvShow: titleModel.isTvShow);
+      var success =
+          await _repository.removeComment(_appUri.isUriComment(titleModel));
 
       if (success) {
-        var response = await _repository.getTitleComments(titleModel.id,
-            isTvShow: titleModel.isTvShow);
+        var response = await _repository
+            .getTitleComments(_appUri.isUriListComments(titleModel));
         emit(TitleDetailCommentSuccessState(response));
       } else {
-        var response = await _repository.getTitleComments(titleModel.id,
-            isTvShow: titleModel.isTvShow);
+        var response = await _repository
+            .getTitleComments(_appUri.isUriListComments(titleModel));
         emit(TitleDetailCommentFailState(response));
       }
     } on CommentByOtherUserException {
       emit(TitleDetailCommentByOtherUserState());
     } catch (e) {
-      var response = await _repository.getTitleComments(titleModel.id,
-          isTvShow: titleModel.isTvShow);
+      var response = await _repository
+          .getTitleComments(_appUri.isUriListComments(titleModel));
       emit(TitleDetailCommentFailState(response));
     }
   }
@@ -76,21 +78,21 @@ class TitleDetailCommentCubit extends Cubit<TitleDetailCommentState> {
     emit(TitleDetailCommentProcessingState());
 
     try {
-      var success = await _repository.saveComment(titleModel.id, comment,
-          isTvShow: titleModel.isTvShow);
+      var success = await _repository
+          .saveComment(_appUri.isUriComment(titleModel), text: comment);
 
       if (success) {
-        var response = await _repository.getTitleComments(titleModel.id,
-            isTvShow: titleModel.isTvShow);
+        var response = await _repository
+            .getTitleComments(_appUri.isUriListComments(titleModel));
         emit(TitleDetailCommentSuccessState(response));
       } else {
-        var response = await _repository.getTitleComments(titleModel.id,
-            isTvShow: titleModel.isTvShow);
+        var response = await _repository
+            .getTitleComments(_appUri.isUriListComments(titleModel));
         emit(TitleDetailCommentFailState(response));
       }
     } catch (e) {
-      var response = await _repository.getTitleComments(titleModel.id,
-          isTvShow: titleModel.isTvShow);
+      var response = await _repository
+          .getTitleComments(_appUri.isUriListComments(titleModel));
       emit(TitleDetailCommentFailState(response));
     }
   }
