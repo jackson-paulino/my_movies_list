@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_movies_list/blocs/splash_cubit.dart';
 import 'package:my_movies_list/data/repositories/user_repository_interface.dart';
+import 'package:my_movies_list/ui/shared/app_colors.dart';
 import 'package:my_movies_list/ui/shared/app_locator.dart';
 import 'package:my_movies_list/ui/shared/app_routes.dart';
 
@@ -34,7 +35,8 @@ class SplashView extends StatelessWidget {
         body: Center(
           child: Icon(
             Icons.movie,
-            size: 30.0,
+            size: 120.0,
+            color: AppColors.primaryDark,
           ),
         ),
       ),
